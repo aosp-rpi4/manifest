@@ -100,6 +100,10 @@ source build/envsetup.sh
 export TARGET_PRODUCT=aosp_rpi4_car
 export TARGET_RELEASE=trunk_staging          # use the matching release for your base tag
 export TARGET_BUILD_VARIANT=userdebug
+
+or 
+
+lunch aosp_rpi4_car-trunk_staging-userdebug
 m
 
 # (Handheld variant instead: TARGET_PRODUCT=aosp_rpi4)
