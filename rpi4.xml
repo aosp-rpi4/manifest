@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  RPi4 AAOS local manifest. See README.md in this directory for full init/sync/build steps.
+  Drop into .repo/local_manifests/ on top of an AOSP checkout, then `repo sync`.
+-->
+<manifest>
+  <remote name="aosp-rpi4" fetch="https://github.com/aosp-rpi4/" />
+  <remote name="rpi"       fetch="https://github.com/raspberrypi/" />
+
+  <!-- additions (not in stock AOSP) -->
+  <project path="device/rpi/rpi4"     name="device_rpi_rpi4"     remote="aosp-rpi4" revision="main" />
+  <project path="kernel/rpi/rpi4"     name="kernel_rpi_rpi4"     remote="aosp-rpi4" revision="rpi4-aaos" />
+  <project path="external/mesa3d-v3d" name="external_mesa3d-v3d" remote="aosp-rpi4" revision="rpi4-aaos" />
+
+  <!-- override stock AOSP minigbm with our fork -->
+  <remove-project name="platform/external/minigbm" />
+  <project path="external/minigbm"    name="external_minigbm"    remote="aosp-rpi4" revision="rpi4-aaos" />
+
+  <!-- Raspberry Pi GPU/boot firmware (start4.elf, fixup4.dat, overlays/) -->
+  <project path="vendor/rpi-firmware" name="firmware" remote="rpi" revision="master" clone-depth="1" />
+</manifest>
