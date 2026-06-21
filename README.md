@@ -65,6 +65,20 @@ firmware — everything needed to build.
 
 ---
 
+## 3b. (automatic) Soong Android.mk allowlist
+
+No manual step — the manifest has a `<copyfile>` on `device_rpi_rpi4` that drops
+`device/rpi/rpi4/androidmk_allowlist.txt` at
+`vendor/google/build/androidmk/allowlist.txt` during `repo sync`. Soong reads that
+path as an extra allowlist, letting Mesa-v3d's legacy `Android.mk` through its
+`external/` denylist. Without it, `lunch` aborts with *"Found blocked Android.mk
+file: external/mesa3d-v3d/..."*. (This is why we don't fork/patch `build/soong`.)
+
+If you ever build a tree that wasn't `repo sync`'d via this manifest, create that
+file by hand from `device/rpi/rpi4/androidmk_allowlist.txt`.
+
+---
+
 ## 4. Build the kernel
 
 The device tree ships a prebuilt kernel under `device/rpi/rpi4/kernel/`, so you
@@ -138,11 +152,3 @@ First boot decompresses APEXes and runs dexopt — give it a few minutes. Then:
 adb shell getprop sys.boot_completed             # -> 1
 adb shell dumpsys activity activities | grep ResumedActivity   # -> CarLauncher
 ```
-
----
-
-## More
-
-Full bring-up history, the SD partition layout, kernel config rationale, and a
-troubleshooting log (graphics, ashmem, audio, HSUM, Bluetooth/USB features,
-RescueParty, serial-log muting) are in **`device/rpi/rpi4/README.md`**.
