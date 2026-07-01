@@ -6,13 +6,20 @@ Android Automotive (AAOS) head-unit BSP for the **Raspberry Pi 4 Model B**.
 
 | Path | Repo | Branch |
 |------|------|--------|
-| `device/rpi/rpi4`     | `aosp-rpi4/device_rpi_rpi4`     | `main` |
+| `device/rpi/rpi4`     | `aosp-rpi4/device_rpi_rpi4`     | **`a16r4`** |
 | `kernel/rpi/rpi4`     | `aosp-rpi4/kernel_rpi_rpi4`     | `rpi4-aaos` |
 | `external/mesa3d-v3d` | `aosp-rpi4/external_mesa3d-v3d` | `rpi4-aaos` |
 | `external/minigbm`    | `aosp-rpi4/external_minigbm`    | `rpi4-aaos` (replaces stock AOSP minigbm) |
 | `vendor/rpi-firmware` | `raspberrypi/firmware`          | `master` |
 
 Products: **`aosp_rpi4_car`** (Automotive) and **`aosp_rpi4`** (handheld).
+
+> **Current stage — `a16r4`:** this is the known-good **Android 16** branch that
+> boots all the way to the **AAOS Car Launcher** on the Pi 4 (hardware V3D
+> graphics, audio, CarService up). All board-specific fixes live in the four repos
+> above — the vanilla AOSP checkout is never patched (the one Soong allowlist need
+> is handled by a `<copyfile>`, see §3b). A plain `repo sync` of this manifest +
+> `lunch aosp_rpi4_car` reproduces that stage.
 
 ---
 
@@ -122,6 +129,14 @@ m
 
 # (Handheld variant instead: TARGET_PRODUCT=aosp_rpi4)
 ```
+
+> **Keep the release as `trunk_staging`.** `a16r4` carries device-local aconfig
+> flag-value overrides (under `device/rpi/rpi4/release/aconfig/trunk_staging/`,
+> registered via `PRODUCT_RELEASE_CONFIG_MAPS`) that disable a few Android-16
+> permission/app-op flags — without them system_server crash-loops at boot
+> (`Missing permission definition … app op 151`). They only apply to the
+> `trunk_staging` release, so build the matching base and
+> `aosp_rpi4_car-trunk_staging-userdebug`.
 
 Produces `out/target/product/rpi4/{system,vendor,product,userdata}.img`.
 
